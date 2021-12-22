@@ -247,3 +247,116 @@ abstract class AbstractClassName
     abstract function abstractFunction(Type $var = null): Type;
 
 }
+**********************************************************************************
+//added by chenyc,其他常用语法:
+1、读取数据库的结果：单条结果
+        $sth = $ods_db->prepare("select count(*) as num from PersonalCapture C left join Account A on A.ID = C.MngAccountID left join Account B on B.ID = A.ParentID where B.ID = :id and C.CaptureType < 102");
+        $sth->bindParam(':id', $dis_id, PDO::PARAM_INT);
+        $sth->execute();
+        $opendoor_num = $sth->fetch(PDO::FETCH_ASSOC)['num'];
+2、多条结果：
+    $sth_dis = $dw_db->prepare("select Dis,sum(Num) as pro_count from DisProjectSize group by Dis order by pro_count desc limit 20;");
+$sth_dis->execute();
+$dis_list = $sth_dis->fetchALL(PDO::FETCH_ASSOC);
+foreach ($dis_list as $row => $dis)
+{
+    $dis_acc = $dis['Dis'];
+}
+
+3、数组的用法：
+<?php
+$fruits = array ( "fruits"  => array ( "a" => "orange",
+                                       "b" => "banana",
+                                       "c" => "apple"
+                                     ),
+                  "numbers" => array ( 1,
+                                       2,
+                                       3,
+                                       4,
+                                       5,
+                                       6
+                                     ),
+                  "holes"   => array (      "first",
+                                       5 => "second",
+                                            "third"
+                                     )
+                );
+
+// 处理上面数组中的值的一些例子
+echo $fruits["holes"][5];    // 打印 "second"
+echo $fruits["fruits"]["a"]; // 打印 "orange"
+unset($fruits["holes"][0]);  // 删除 "first"
+
+// 创建一个新的多维数组
+$juices["apple"]["green"] = "good"; 
+?>
+
+<?php
+// This:
+$a = array( 'color' => 'red',
+            'taste' => 'sweet',
+            'shape' => 'round',
+            'name'  => 'apple',
+            4        // 键名为 0
+          );
+
+$b = array('a', 'b', 'c');
+
+// . . .完全等同于:
+$a = array();
+$a['color'] = 'red';
+$a['taste'] = 'sweet';
+$a['shape'] = 'round';
+$a['name']  = 'apple';
+$a[]        = 4;        // 键名为 0
+
+$b = array();
+$b[] = 'a'; //起到 类似于 push_back的作用，注意这点
+$b[] = 'b';
+$b[] = 'c';
+
+// 执行上述代码后，数组 $a 将是
+// array('color' => 'red', 'taste' => 'sweet', 'shape' => 'round', 
+// 'name' => 'apple', 0 => 4)， 数组 $b 将是
+// array(0 => 'a', 1 => 'b', 2 => 'c'), 或简单的 array('a', 'b', 'c').
+?>
+
+?php
+// Array as (property-)map
+$map = array( 'version'    => 4,
+              'OS'         => 'Linux',
+              'lang'       => 'english',
+              'short_tags' => true
+            );
+            
+// 严格的数字键
+$array = array( 7,
+                8,
+                0,
+                156,
+                -10
+              );
+// 这相当于 array(0 => 7, 1 => 8, ...)
+
+$switching = array(         10, // key = 0
+                    5    =>  6,
+                    3    =>  7, 
+                    'a'  =>  4,
+                            11, // key = 6 (整数索引的最大值为 5)
+                    '8'  =>  2, // key = 8 (整数！)
+                    '02' => 77, // key = '02'
+                    0    => 12  // 值 10 被 12 覆盖
+                  );
+                  
+// 空数组
+$empty = array();         
+?>
+
+集合：
+<?php
+$colors = array('red', 'blue', 'green', 'yellow');
+
+foreach ($colors as $color) {
+    echo "Do you like $color?\n";
+}
+?>
