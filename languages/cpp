@@ -1,4 +1,4 @@
-基类当接口类，实现多态：
+基类当接口类，实现子类集成的多态：
 class RateLimiterInterface {
 public:
     virtual ~RateLimiterInterface() {}
@@ -11,4 +11,16 @@ public:
 
     virtual double get_rate() const = 0;
     virtual void set_rate(double rate) = 0;
+};
+
+2、接口与实现分离：
+class Weight;
+
+class WeightProxy
+{
+public:
+    WeightProxy();
+    ~WeightProxy();
+    std::string GetInfo();
+    std::unique_ptr<Weight> m_proxy;
 };
