@@ -1,1 +1,17 @@
+头文件包含多次，导致编译不过：
 
+  1 #ifndef __akcs_spinlock__h__
+  2 #define __akcs_spinlock_h__
+  3 #include <atomic>
+
+报错如下：
+g++ -fPIC -g -O3 -Wall -std=c++11 -c rate_limiter.cpp -o rate_limiter.o 
+In file included from spinlock_guard.h:3:0,
+                 from rate_limiter.cpp:2:
+spinlock.h:8:7: error: redefinition of ‘class Spinlock’
+ class Spinlock
+       ^
+In file included from rate_limiter.h:4:0,
+                 from rate_limiter.cpp:1:
+spinlock.h:8:7: error: previous definition of ‘class Spinlock’
+ class Spinlock
