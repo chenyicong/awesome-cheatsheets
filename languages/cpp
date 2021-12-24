@@ -24,3 +24,10 @@ public:
     std::string GetInfo();
     std::unique_ptr<Weight> m_proxy;
 };
+
+此时，提供给调用方的头文件，要包含接口头文件与实现类的头文件，否则调用方无法 new实现类对象出来；
+
+3、类的const函数，只能在构造函数中初始化；
+
+4、函数的默认参数，只能在函数声明中负值，函数定义处不能再写默认值了，例如：
+int set_rate(int rate = 1);   int set_rate(int rate) {}
