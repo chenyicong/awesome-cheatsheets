@@ -31,3 +31,148 @@ public:
 
 4、函数的默认参数，只能在函数声明中负值，函数定义处不能再写默认值了，例如：
 int set_rate(int rate = 1);   int set_rate(int rate) {}
+
+5、operator new/detele 既可以是全局的，也可以是某个类中的作用域：
+
+#include <iostream>
+#include <memory>
+#include <string.h>
+#include <stdlib.h>
+using namespace std;
+ 
+
+class B;
+class A
+{
+public:
+    //weak_ptr<B> pb;
+    shared_ptr<B> pb;
+    void doSomthing()
+    {
+        //shared_ptr<B> pp = pb.lock();
+        if(pb)//通过lock()方法来判断它所管理的资源是否被释放
+        {
+            cout<<"sb use count:"<<pb.use_count()<<endl;
+        }
+    }
+  void * operator new(size_t size)
+ {
+     
+     cout<<"new mmm"<<endl;
+     return malloc(size);
+ }
+
+        void operator delete(void *ptr)
+        {
+            free(ptr);
+        }
+    ~A()
+    {
+        cout << "kill A\n";
+    }
+};
+ 
+class B
+{
+public:
+    //weak_ptr<A> pa;
+    shared_ptr<A> pa;
+    ~B()
+    {
+        cout <<"kill B\n";
+    }
+};
+ 
+int main(int argc, char** argv)
+{
+    shared_ptr<A> sa(new A());
+    shared_ptr<B> sb(new B());
+    if(sa && sb)
+    {
+        sa->pb=sb;
+        sb->pa=sa;
+    }
+    sa->doSomthing();
+    cout<<"sb use count:"<<sb.use_count()<<endl;
+    return 0;
+}
+
+编译结果如下：
+new mmm ===>证明只有 在：shared_ptr<A> sa(new A()); 这里有发生new（）
+sb use count:2
+sb use count:2
+
+很奇怪的是，如果作用域变成全局的：
+
+#include <iostream>
+#include <memory>
+#include <string.h>
+#include <stdlib.h>
+using namespace std;
+ 
+  void * operator new(size_t size)
+ {
+     
+     cout<<"new mmm"<<endl;
+     return malloc(size);
+ }
+
+        void operator delete(void *ptr)
+        {
+            free(ptr);
+        }
+class B;
+class A
+{
+public:
+    //weak_ptr<B> pb;
+    shared_ptr<B> pb;
+    void doSomthing()
+    {
+        //shared_ptr<B> pp = pb.lock();
+        if(pb)//通过lock()方法来判断它所管理的资源是否被释放
+        {
+            cout<<"sb use count:"<<pb.use_count()<<endl;
+        }
+    }
+
+    ~A()
+    {
+        cout << "kill A\n";
+    }
+};
+ 
+class B
+{
+public:
+    //weak_ptr<A> pa;
+    shared_ptr<A> pa;
+    ~B()
+    {
+        cout <<"kill B\n";
+    }
+};
+ 
+int main(int argc, char** argv)
+{
+    shared_ptr<A> sa(new A());
+    shared_ptr<B> sb(new B());
+    if(sa && sb)
+    {
+        sa->pb=sb;
+        sb->pa=sa;
+    }
+    sa->doSomthing();
+    cout<<"sb use count:"<<sb.use_count()<<endl;
+    return 0;
+}
+
+那么执行的结果变成：
+new mmm
+new mmm
+new mmm
+new mmm
+sb use count:2
+sb use count:2
+
+有四个operator new（）调用，难道智能指针的强引用复制，调用的时候 placement new()???  待验证。
