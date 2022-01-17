@@ -176,3 +176,19 @@ sb use count:2
 sb use count:2
 
 有四个operator new（）调用，难道智能指针的强引用复制，调用的时候 placement new()???  待验证。
+
+----------------
+6、怎样快速将一个类中的移动构造、赋值运算符、拷贝构造置为delete:
+class RateLimiterTokenBucket : public RateLimiterTokenBucketInterface 
+{
+public:
+    //qps:限制最大为十亿,受限于时间精度,ns级别
+    //burst_factor: 允许瞬间爆发的因子，默认为1，最大为2
+    RateLimiterTokenBucket(uint64_t qps, int8_t burst_factor = 1);
+    DISALLOW_COPY_MOVE_AND_ASSIGN(RateLimiterTokenBucket);
+    };
+    
+    //added by chenyc,2021.12.23
+#ifndef DISALLOW_COPY_MOVE_AND_ASSIGN
+#define DISALLOW_COPY_MOVE_AND_ASSIGN(TypeName) TypeName(const TypeName&) = delete; TypeName(const TypeName&&) = delete;  TypeName& operator=(const TypeName&) = delete
+#endif //DISALLOW_COPY_MOVE_AND_ASSIGN
