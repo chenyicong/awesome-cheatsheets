@@ -14,6 +14,7 @@ public:
 };
 
 2、接口与实现分离：
+--interface.h
 class Weight;
 
 class WeightProxy
@@ -21,11 +22,27 @@ class WeightProxy
 public:
     WeightProxy();
     ~WeightProxy();
-    std::string GetInfo();
+    void DoSomething();
     std::unique_ptr<Weight> m_proxy;
 };
 
-此时，提供给调用方的头文件，要包含接口头文件与实现类的头文件，否则调用方无法 new实现类对象出来；
+--interface.cpp (这个接口类的实现源文件给调用方参考，或者甚至也编入动态库)
+WeightProxy::WeightProxy()
+{
+    m_proxy = new Weight;
+}
+
+ClxExp::~ClxExp()
+{
+
+}
+
+void WeightProxy::DoSomething()
+{
+    m_proxy->DoSomething();
+}
+
+此时，提供给调用方的头文件，只需要包含接口头文件+动态库即可。
 
 3、类的const函数，只能在构造函数中初始化；
 
