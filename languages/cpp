@@ -192,3 +192,48 @@ public:
 #ifndef DISALLOW_COPY_MOVE_AND_ASSIGN
 #define DISALLOW_COPY_MOVE_AND_ASSIGN(TypeName) TypeName(const TypeName&) = delete; TypeName(const TypeName&&) = delete;  TypeName& operator=(const TypeName&) = delete
 #endif //DISALLOW_COPY_MOVE_AND_ASSIGN
+--------------------
+7、怎么编写枚举值
+C++中的枚举类型
+C++11提供了更安全的枚举类型，不能再直接把这种枚举值当作整数值来使用。但如果我们想把它作为整数来使用呢？
+例如
+enum class ElemType
+{
+    CAP,
+    IND,
+    VS
+};
+
+在以前，我们使用枚举类型的时候，没有添加class关键词，可以如下定义，
+enum ElemTypeOld
+{
+    CAP = 1，
+    IND，
+    VS = 3
+};
+在定义了某个枚举变量之后，可以将其与整数直接进行比较。但这样做存在一些问题，因为自定义的整数值可能不连续，某个定义了，其它的没有定义等。
+那么输出ElemTypeOld::IND时，会输出2，但如果把CAP的值改为2,那么IND的值就会是3，这就与VS的值一样了。(在ElemType也这样做的时候，也会出现这种情况，类型更安全并不是这个意思。)
+
+在ElemTypeOld里面，不论是否指定整数值，都可以作为整数值来使用，在ElemType里面，只能作为枚举类型，不能与整数值混用。C++里面也提供了将其转化为整数的方法，
+static_cast<int>(ElemType::CAP)  -> 0,
+如果ElemType里面指定整数值，就会得到指定的整数值。
+
+本来是想整理将枚举类型转化为字符串输出的，但在将其转化为整数的时候遇到了上面的问题。下面进入正题。
+一种方法使用swicth语句，
+string getElemTypeName(ElemType type)
+{
+    switch(type)
+    {
+        case ElemType::CAP : return "CAP";break;
+        case ElemType::IND : return "IND";break;
+        case ElemType::VS :  return "VS";break;
+        default: return "error"; break;    
+    }
+}
+另一种方法，定义常量字符串数组，
+const char* names[] = {"CAP","IND","VS"};
+string getElemTypeName(ElemType type)
+{
+    int idx = static_cast<int>(type);
+    return names[idx];
+}
