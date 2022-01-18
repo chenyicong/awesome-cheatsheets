@@ -27,6 +27,7 @@ public:
 };
 
 --interface.cpp (这个接口类的实现源文件给调用方参考，或者甚至也编入动态库)
+#include "Weight.h" //接口类的实现源文件中include 实现类头文件
 WeightProxy::WeightProxy()
 {
     m_proxy = new Weight;
