@@ -1,0 +1,18 @@
+1、修改单个进程允许打开的文件描述符
+cat /etc/security/limits.conf
+
+增加：
+
+root soft nofile 65535
+root hard nofile 65535
+* soft nofile 65535
+* hard nofile 65535
+
+
+
+
+立即生效：
+$ echo "* hard nofile 102400" >> /etc/security/limits.conf
+$ echo "* soft nofile 102400" >> /etc/security/limits.conf
+$ sysctl -w fs.file-max=102400
+$ sysctl -p
