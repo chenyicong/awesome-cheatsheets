@@ -15,4 +15,18 @@ const int＆foo（）; 这里的const是有意义的。
 1
 @Philipp的解决方案是正确的。
 使用-Wno-ignored-qualifiers将影响您的代码并阻止编译器发出您创建的警告，而Philipp的解决方案将不会影响您自己的代码产生的警告。
---added by chenyc,或者通过 push pop来解决；
+
+
+--added by chenyc,或者通过 push pop来解决:
+正确的做法：
+CMake solution
+You can set -isystem flag explicitly by
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -isystem /path/to/system/header")
+C++ solution
+You can ignore warnings in system headers by adding pragmas
+#pragma clang/GCC diagnostic push
+#pragma clang diagnostic ignored "-Wunused-parameter"
+#include <some/system/header.hpp> // warning ignored here，第三方的编译错误限制在这里
+#pragma clang/GCC diagnostic pop
+#include <myproject/header.hpp> // warning reported here
+
