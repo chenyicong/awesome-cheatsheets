@@ -772,7 +772,14 @@ ssh -CqTnN -D localhost:1080  user@202.115.8.1
 # 终端下正确设置 ALT 键和 BackSpace 键
 http://www.skywind.me/blog/archives/2021
 
-
+# 终端打印不带sh后缀
+pstack_core.sh为例：
+if test $# -ne 2; then
+    echo "Usage: `basename $0 .sh` <exe> <core-file>" 1>&2
+    exit 1
+fi
+打印如下：
+Usage: pstack_core <exe> <core-file>
 ##############################################################################
 # 有用的函数
 ##############################################################################
