@@ -255,3 +255,33 @@ string getElemTypeName(ElemType type)
     int idx = static_cast<int>(type);
     return names[idx];
 }
+-------------------- 线上问题定位：core
+1、gcore -o csmain.core 31232   可以对运行中的进程执行core转存；
+2、然后利用以下脚本，打印出core的所有线程的堆栈情况：
+
+#!/bin/bash
+
+# auth:chenyc
+# date:2022.03.15
+# 方便一键生成core文件的线程堆栈信息
+
+if test $# -ne 2; then
+    echo "Usage: `basename $0 .sh` <exe> <core-file>" 1>&2
+    echo "eg: `basename $0 .sh` /usr/local/akcs/csmain/bin/csmain  csmain.core.25634" 1>&2
+    exit 1
+fi
+
+backtrace="thread apply all bt"
+
+gdb --quiet -nx $1 $2 <<EOF 2>&1 | 
+set width 0
+set height 0
+set solib-search-path
+$backtrace
+EOF
+/bin/sed -n \
+    -e 's/^\((gdb) \)*//' \
+    -e '/^#/p' \
+    -e '/^Thread/p'
+    
+
