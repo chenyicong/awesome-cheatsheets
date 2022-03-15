@@ -1,0 +1,18 @@
+1、 "warning: type qualifiers ignored on function return type"（忽略了函数返回类型的类型限定符）:
+通常是因为在函数前面的返回值面前添加了多余的 const 限定符
+常见于：
+const int foo（）; 这里的const是没用的。实际上什么也没做。
+const int＆foo（）; 这里的const是有意义的。
+
+在编译一些使用Boost.ProgramOptions的代码时遇到此警告。我使用-Werror该警告是在终止我的构建，但是由于警告的源是在Boost的深处，所以我无法通过修改代码来摆脱它。
+
+经过大量挖掘之后，我发现禁用了警告的编译器选项：
+
+-Wno-ignored-qualifiers
+
+我遇到了同样的问题，最终使用-isystem代替设置Boost的include路径-I，从而抑制了Boost头引发的所有警告。
+— Philipp
+1
+@Philipp的解决方案是正确的。
+使用-Wno-ignored-qualifiers将影响您的代码并阻止编译器发出您创建的警告，而Philipp的解决方案将不会影响您自己的代码产生的警告。
+--added by chenyc,或者通过 push pop来解决；
