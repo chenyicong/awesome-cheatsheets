@@ -1,0 +1,2 @@
+1、格式化输出： set print pretty on
+2、多线程调试： set scheduler-locking on
