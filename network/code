@@ -1,6 +1,7 @@
-https://my.oschina.net/miffa/blog/390931   https://github.com/ossrs/srs/issues/775 (srs里面探讨了 加入该socket选项的可能性，里面提到：如果有这个特性，srs-dolphin似乎也没什么用途了。同样
-    如果设置了这个选项之后，nginx的多进程fork之后，监听同一个fd的问题，也可以解决了。。)
-
+SO_REUSEADDR-SO_REUSEPORT的区别，内核3.9后，支持的SO_REUSEPORT让多进程、线程绑定同一个端口，成为可能
+*****************************************************************
+https://my.oschina.net/miffa/blog/390931   https://github.com/ossrs/srs/issues/775 (srs里面探讨了 加入该socket选项的可能性，里面提到：如果有这个特性，srs-dolphin似乎也没什么用途了。
+同样如果设置了这个选项之后，nginx的多进程fork之后，监听同一个fd的问题，也可以解决了。。)
 
 运行在Linux系统上网络应用程序，为了利用多核的优势，一般使用以下比较典型的多进程/多线程服务器模型：
 
