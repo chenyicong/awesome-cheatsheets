@@ -29,4 +29,16 @@ You can ignore warnings in system headers by adding pragmas
 #include <some/system/header.hpp> // warning ignored here，第三方的编译错误限制在这里
 #pragma clang/GCC diagnostic pop
 #include <myproject/header.hpp> // warning reported here
-
+---
+项目例子:
+src/switch_rtp.c:138:5: error: ISO C90 forbids mixed declarations and code [-Werror=declaration-after-statement]
+     char *pszWrite = (char *) malloc(sizeof(char) * 10240);
+     ^
+cc1: all warnings being treated as errors
+那么如下就可以关闭掉：
+#pragma GCC diagnostic ignored "-Wdeclaration-after-statement"
+注意：
+#pragma GCC diagnostic ignored "-Werror=declaration-after-statement"
+#pragma GCC diagnostic ignored "-Werror"
+以上两种都是错误的写法
+---
