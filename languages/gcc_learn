@@ -37,6 +37,7 @@ src/switch_rtp.c:138:5: error: ISO C90 forbids mixed declarations and code [-Wer
 cc1: all warnings being treated as errors
 那么如下就可以关闭掉：
 #pragma GCC diagnostic ignored "-Wdeclaration-after-statement"
+
 注意：
 #pragma GCC diagnostic ignored "-Werror=declaration-after-statement"
 #pragma GCC diagnostic ignored "-Werror"
