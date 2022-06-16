@@ -868,6 +868,12 @@ export LESS_TERMCAP_so=$'\E[1m\E[33m\E[44m'
 "\eJ": beginning-of-line
 "\eK": end-of-line
 
+##############################################################################
+# 批量替换成utf-8编码
+##############################################################################
+find . ! -iregex '.*\.svn.*' -type f -regextype posix-extended -regex ".*\.(cpp|cc|c|h)" -exec bash -c "enca -L zh_CN {}|grep GB2312 > /dev/null && echo {}" \;
+find . ! -iregex '.*\.svn.*' -type f -regextype posix-extended -regex ".*\.(cpp|cc|c|h)" -exec bash -c "enca -L zh_CN {}  | grep GB2312 >/dev/null && enconv -L zh_CN -x UTF-8 {}" \;
+如果是Linux平台要安装一下enca，命令：apt-get install enca。
 
 ##############################################################################
 # References
