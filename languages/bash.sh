@@ -317,6 +317,14 @@ num=$(($num + 1))         # 变量递增
 num=$((num + 1))          # 变量递增，双括号内的 $ 可以省略
 num=$((1 + (2 + 3) * 2))  # 复杂计算
 
+added by chenyc:
+字符串拼接：
+filename_date=`date -d  ${date} +%w`
+tar_file=jira_attachment_${filename_date}.tar.gz  //字符串拼接
+或者下面这样：
+filename_date=`date -d  ${date} +%w`
+filename_post=".zip"
+filename_upload="${filename_pre}${filename_date}${filename_post}"
 
 ##############################################################################
 # 事件指示符
